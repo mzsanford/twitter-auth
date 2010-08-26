@@ -90,6 +90,7 @@ describe TwitterAuthTestController do
       controller.stub!(:cookies).and_return({:remember_token => 'abc'})
       get :current_user_action
       assigns[:user].should == user
+      request.session[:user_id].should == user.id
     end
 
     it 'should return nil if there is no user matching that id' do

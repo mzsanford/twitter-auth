@@ -28,6 +28,8 @@ module TwitterAuth
         else
           false
         end
+      # Save the user_id to the sessions to prevent recurring queries.
+      current_user = @current_user if @current_user
     end
 
     def current_user=(new_user)
