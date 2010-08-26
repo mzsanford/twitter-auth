@@ -68,7 +68,7 @@ describe TwitterAuthTestController do
   describe "#authentication_succeeded" do
     it 'should set the flash[:notice] to a default success message' do
       get :pass_auth
-      flash[:notice].should == 'You have logged in successfully.' 
+      flash[:notice].should == 'You have logged in successfully.'
     end
 
     it 'should be able ot receive a custom message' do

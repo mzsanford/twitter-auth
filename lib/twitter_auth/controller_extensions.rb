@@ -20,7 +20,7 @@ module TwitterAuth
     end
 
     def current_user
-      @current_user ||= 
+      @current_user ||=
         if session[:user_id]
           User.find_by_id(session[:user_id])
         elsif cookies[:remember_token]
@@ -40,12 +40,12 @@ module TwitterAuth
     end
 
     def login_required
-      authorized? || access_denied 
+      authorized? || access_denied
     end
 
     def access_denied
       store_location
-      redirect_to login_path
+      redirect_to login_path unless (request.path == login_path)
     end
 
     def store_location

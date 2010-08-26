@@ -54,7 +54,7 @@ describe SessionsController do
 
       it 'should redirect to the oauth_callback if one is specified' do
         TwitterAuth.stub!(:oauth_callback).and_return('http://localhost:3000/development')
-        TwitterAuth.stub!(:oauth_callback?).and_return(true)        
+        TwitterAuth.stub!(:oauth_callback?).and_return(true)
 
         get :new
         response.should redirect_to('https://twitter.com/oauth/authorize?oauth_token=faketoken&oauth_callback=' + CGI.escape(TwitterAuth.oauth_callback))
@@ -84,19 +84,19 @@ describe SessionsController do
           @user = Factory.create(:twitter_oauth_user, :twitter_id => '123')
           @time = Time.now
           @remember_token = ActiveSupport::SecureRandom.hex(10)
-          
+
           Time.stub!(:now).and_return(@time)
           ActiveSupport::SecureRandom.stub!(:hex).and_return(@remember_token)
 
           request.session[:request_token] = 'faketoken'
           request.session[:request_token_secret] = 'faketokensecret'
           get :oauth_callback, :oauth_token => 'faketoken'
-        end 
+        end
 
         describe 'building the access token' do
           it 'should rebuild the request token' do
             correct_token =  OAuth::RequestToken.new(TwitterAuth.consumer,'faketoken','faketokensecret')
-            
+
             %w(token secret).each do |att|
               assigns[:request_token].send(att).should == correct_token.send(att)
             end
@@ -113,9 +113,9 @@ describe SessionsController do
             session[:request_token_secret].should be_nil
           end
         end
-        
+
         describe 'identifying the user' do
-          it "should find the user" do         
+          it "should find the user" do
             assigns[:user].should == @user
           end
 
@@ -163,7 +163,7 @@ describe SessionsController do
     before do
       stub_basic!
     end
-    
+
     describe '#new' do
       it 'should render the new action' do
         get :new
@@ -174,7 +174,7 @@ describe SessionsController do
         get :new
         response.should have_tag('form[action=/session][id=login_form][method=post]')
       end
-      
+
       describe '#create' do
         before do
           @user = Factory.create(:twitter_basic_user, :twitter_id => '123')
@@ -197,7 +197,7 @@ describe SessionsController do
         end
 
         it 'should call authentication_succeeded on authentication success' do
-          User.should_receive(:authenticate).and_return(@user)    
+          User.should_receive(:authenticate).and_return(@user)
           post :create, :login => 'twitterman', :password => 'cool'
           response.should redirect_to('/')
           flash[:notice].should_not be_blank
