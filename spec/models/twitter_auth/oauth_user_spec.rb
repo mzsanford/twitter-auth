@@ -1,10 +1,10 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe TwitterAuth::OauthUser do
   before do
     stub_oauth!
   end
- 
+
   describe '.identify_or_create_from_access_token' do
     before do
        @token = OAuth::AccessToken.new(TwitterAuth.consumer, 'faketoken', 'fakesecret')

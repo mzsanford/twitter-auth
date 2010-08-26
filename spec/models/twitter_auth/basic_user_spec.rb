@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe TwitterAuth::BasicUser do
   before do
@@ -31,19 +31,21 @@ describe TwitterAuth::BasicUser do
 
     it 'should return the password' do
       @user.password.should == 'monkey'
-    end    
+    end
 
     it 'should not be a database attribute' do
       @user['password'].should_not == 'monkey'
     end
   end
-  
+
   describe '.verify_credentials' do
     before do
       @user = Factory.create(:twitter_basic_user)
     end
 
     it 'should return a JSON hash of the user when successful' do
+      FakeWeb.register_uri(:get, 'https://twitterman:test@twitter.com:443/account/verify_credentials.json', :body => "{\"profile_image_url\":\"http:\\/\\/static.twitter.com\\/images\\/default_profile_normal.png\",\"description\":\"Saving the world for all Twitter kind.\",\"utc_offset\":null,\"favourites_count\":0,\"profile_sidebar_fill_color\":\"e0ff92\",\"screen_name\":\"twitterman\",\"statuses_count\":0,\"profile_background_tile\":false,\"profile_sidebar_border_color\":\"87bc44\",\"friends_count\":2,\"url\":null,\"name\":\"Twitter Man\",\"time_zone\":null,\"protected\":false,\"profile_background_image_url\":\"http:\\/\\/static.twitter.com\\/images\\/themes\\/theme1\\/bg.gif\",\"profile_background_color\":\"9ae4e8\",\"created_at\":\"Fri Feb 06 18:10:32 +0000 2009\",\"profile_text_color\":\"000000\",\"followers_count\":2,\"location\":null,\"id\":123,\"profile_link_color\":\"0000ff\"}")
+
       hash = User.verify_credentials('twitterman','test')
       hash.should be_a(Hash)
       hash['screen_name'].should == 'twitterman'
@@ -51,7 +53,7 @@ describe TwitterAuth::BasicUser do
     end
 
     it 'should return false when a 401 unauthorized happens' do
-      FakeWeb.register_uri(:get, 'https://twitter.com:443/account/verify_credentials.json', :string => '401 "Unauthorized"', :status => ['401',' Unauthorized'])
+      FakeWeb.register_uri(:get, 'https://twitterman:wrong@twitter.com:443/account/verify_credentials.json', :body => '401 "Unauthorized"', :status => ['401',' Unauthorized'])
       User.verify_credentials('twitterman','wrong').should be_false
     end
   end

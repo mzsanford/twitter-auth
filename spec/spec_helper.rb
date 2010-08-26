@@ -5,6 +5,10 @@ rescue LoadError
   exit
 end
 
+Spec::Runner.configure do |config|
+  config.mock_with :rspec
+end
+
 require File.dirname(__FILE__) + '/../app/models/twitter_auth/generic_user'
 
 class TwitterAuth::GenericUser
@@ -14,6 +18,8 @@ end
 class User < TwitterAuth::GenericUser; end
 
 require 'remarkable'
+require 'remarkable_rails'
+
 require File.dirname(__FILE__) + '/fixtures/factories'
 require File.dirname(__FILE__) + '/fixtures/fakeweb'
 require File.dirname(__FILE__) + '/fixtures/twitter'
@@ -24,11 +30,11 @@ ActiveRecord::Base.logger = Logger.new(plugin_spec_dir + "/debug.log")
 load(File.dirname(__FILE__) + '/schema.rb')
 
 def define_basic_user_class!
-  TwitterAuth::GenericUser.send :include, TwitterAuth::BasicUser 
+  TwitterAuth::GenericUser.send :include, TwitterAuth::BasicUser
 end
 
 def define_oauth_user_class!
-  TwitterAuth::GenericUser.send :include, TwitterAuth::OauthUser  
+  TwitterAuth::GenericUser.send :include, TwitterAuth::OauthUser
 end
 
 def stub_oauth!

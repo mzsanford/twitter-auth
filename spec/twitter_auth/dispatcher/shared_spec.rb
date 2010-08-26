@@ -1,11 +1,11 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe TwitterAuth::Dispatcher::Shared do
   include TwitterAuth::Dispatcher::Shared
 
   describe '#append_extension_to' do
     it 'should leave extensions alone if they exist' do
-      append_extension_to('/fake.json').should == '/fake.json'    
+      append_extension_to('/fake.json').should == '/fake.json'
       append_extension_to('/fake.xml').should == '/fake.xml'
     end
 

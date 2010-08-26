@@ -1,11 +1,11 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 describe TwitterAuth::GenericUser do
   should_validate_presence_of :login, :twitter_id
   should_validate_format_of :login, 'some_guy', 'awesome', 'cool_man'
   should_not_validate_format_of :login, 'with-dashes', 'with.periods', 'with spaces'
   should_validate_length_of :login, :in => 1..15
-  
+
   it 'should validate uniqueness of login' do
     Factory.create(:twitter_oauth_user)
     Factory.build(:twitter_oauth_user).should have_at_least(1).errors_on(:login)
